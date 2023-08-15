@@ -1,12 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    />
-
-    {{ musicians }}
+    <MusiciansTable />
   </q-page>
 </template>
 
@@ -15,6 +9,8 @@ import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { supabase } from "../boot/supabase";
 import { useMusiciansStore } from "../store/musicians";
+
+import MusiciansTable from "../components/MusiciansTable.vue";
 
 const user = ref(null);
 const musiciansStore = useMusiciansStore();

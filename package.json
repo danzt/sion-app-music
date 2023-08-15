@@ -1,8 +1,8 @@
 {
-  "name": "sion-bands",
+  "name": "BSion",
   "version": "0.0.1",
   "description": "App for tha band Sion of Venezuela",
-  "productName": "band-app",
+  "productName": "BSion",
   "author": "Daniel Bonalde",
   "private": true,
   "scripts": {

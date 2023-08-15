@@ -11,21 +11,22 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> Sion Band </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div></div>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+        <q-item-label header> </q-item-label>
 
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
-          @click="logout()"
+          :link="link"
+          :handleClick="logout"
         />
       </q-list>
     </q-drawer>
@@ -36,44 +37,26 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
+<script setup>
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "../boot/supabase";
+import linksList from "../sources/links";
+
 import EssentialLink from "components/EssentialLink.vue";
 
-const linksList = [
-  {
-    title: "Logout",
-    caption: "quasar.dev",
-    icon: "school",
-  },
-];
+const leftDrawerOpen = ref(false);
 
-export default defineComponent({
-  name: "MainLayout",
+const essentialLinks = linksList;
 
-  components: {
-    EssentialLink,
-  },
+const logout = async () => {
+  await supabase.auth.signOut();
+  router.push({ path: "/login" });
+};
 
-  setup() {
-    const leftDrawerOpen = ref(false);
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
 
-    const router = useRouter();
-    const logout = async () => {
-      await supabase.auth.signOut();
-      console.log(router);
-      router.push({ path: "/login" });
-    };
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-      logout,
-    };
-  },
-});
+const router = useRouter();
 </script>

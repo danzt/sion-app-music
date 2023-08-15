@@ -16,7 +16,7 @@ const routes = [
         path: "",
         name: "home",
         component: () => import("pages/IndexPage.vue"),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, title: "Home" },
       },
       /*
       {
@@ -30,7 +30,7 @@ const routes = [
         path: "users",
         name: "users",
         component: () => import("pages/UsersPage.vue"),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, title: "Profile" },
       }, // Nueva ruta para listar usuarios
     ],
   },
@@ -43,7 +43,7 @@ const routes = [
         path: "",
         name: "login",
         component: () => import("pages/LoginPage.vue"),
-        meta: { requiresGuest: true },
+        meta: { requiresGuest: true, title: "Login" },
       },
     ],
   },
@@ -55,7 +55,7 @@ const routes = [
         path: "",
         name: "register",
         component: () => import("pages/RegisterPage.vue"),
-        meta: { requiresGuest: true },
+        meta: { requiresGuest: true, title: "Register" },
       },
     ],
   },
