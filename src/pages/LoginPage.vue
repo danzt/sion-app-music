@@ -61,10 +61,15 @@
   </q-page>
 </template>
 <script setup>
-import { supabase } from "../boot/supabase";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { supabase } from "../boot/supabase";
+import { useUserStore } from "../store";
 
 const router = useRouter();
+
+const userStore = useUserStore();
+const { user } = storeToRefs(useUserStore);
 
 const loginWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -73,6 +78,12 @@ const loginWithGoogle = async () => {
       redirectTo: "http://localhost:9000/",
     },
   });
+  if (error) {
+    console.log(error);
+    return;
+  }
+  const user = data.user;
+  userStore.setUser(user);
 };
 
 const redirectToRegister = () => {
