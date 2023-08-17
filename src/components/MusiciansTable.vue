@@ -1,147 +1,146 @@
 <template>
   <div class="q-pa-md">
-    <q-table flat bordered :rows="rows" :columns="columns" row-key="name" />
+    <q-table
+      flat
+      bordered
+      ref="tableRef"
+      title="Musicos"
+      :rows="musicians"
+      :columns="columns"
+      row-key="id"
+      v-model:pagination="pagination"
+      :loading="loading"
+      :filter="filter"
+      binary-state-sort
+      @request="onRequest"
+    >
+      <template v-slot:top>
+        <q-btn
+          round
+          class="q-ml-sm"
+          color="green"
+          :disable="loading"
+          icon="add"
+          @click="redirectToRegister"
+        />
+        <q-space />
+        <q-input
+          borderless
+          dense
+          debounce="300"
+          color="primary"
+          v-model="filter"
+          placeholder="Search"
+        >
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </template>
+    </q-table>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useMusiciansStore } from "../store/musicians"; // Import your Pinia store here
+
 const columns = [
   {
-    name: "name",
+    name: "first_name",
     required: true,
-    label: "Dessert (100g serving)",
+    label: "First Name",
     align: "left",
-    field: (row) => row.name,
+    field: "first_name",
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "calories",
-    align: "center",
-    label: "Calories",
-    field: "calories",
+    name: "last_name",
+    label: "Last Name",
+    field: "last_name",
     sortable: true,
   },
-  { name: "fat", label: "Fat (g)", field: "fat", sortable: true },
-  { name: "carbs", label: "Carbs (g)", field: "carbs" },
-  { name: "protein", label: "Protein (g)", field: "protein" },
-  { name: "sodium", label: "Sodium (mg)", field: "sodium" },
   {
-    name: "calcium",
-    label: "Calcium (%)",
-    field: "calcium",
+    name: "phone_number",
+    label: "Phone Number",
+    field: "phone_number",
     sortable: true,
-    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
   },
   {
-    name: "iron",
-    label: "Iron (%)",
-    field: "iron",
+    name: "role_id",
+    label: "Role",
+    field: "role_id",
     sortable: true,
-    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+    format: (value) => {
+      const role = roleOptions.find((option) => option.value === value);
+      return role ? role.label : "";
+    },
   },
 ];
 
-const rows = [
+const roleOptions = [
   {
-    name: "Frozen Yogurt",
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: "14%",
-    iron: "1%",
+    label: "Musician",
+    value: 1,
   },
   {
-    name: "Ice cream sandwich",
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: "8%",
-    iron: "1%",
-  },
-  {
-    name: "Eclair",
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: "6%",
-    iron: "7%",
-  },
-  {
-    name: "Cupcake",
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: "3%",
-    iron: "8%",
-  },
-  {
-    name: "Gingerbread",
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: "7%",
-    iron: "16%",
-  },
-  {
-    name: "Jelly bean",
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: "0%",
-    iron: "0%",
-  },
-  {
-    name: "Lollipop",
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: "0%",
-    iron: "2%",
-  },
-  {
-    name: "Honeycomb",
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: "0%",
-    iron: "45%",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: "2%",
-    iron: "22%",
-  },
-  {
-    name: "KitKat",
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: "12%",
-    iron: "6%",
+    label: "Director",
+    value: 2,
   },
 ];
+
+const tableRef = ref();
+const filter = ref("");
+const loading = ref(false);
+const pagination = ref({
+  sortBy: "id",
+  descending: false,
+  page: 1,
+  rowsPerPage: 10, // Adjust as needed
+  rowsNumber: 0, // Will be updated in onRequest
+});
+
+const musiciansStore = useMusiciansStore(); // Replace with your Pinia store
+
+// Define a ref for the musicians data
+const musicians = ref([]);
+const router = useRouter();
+
+const onRequest = async (props) => {
+  const { page, rowsPerPage, sortBy, descending } = props.pagination;
+  const filter = props.filter;
+
+  loading.value = true;
+
+  // Fetch data from your Pinia store
+  await musiciansStore.fetchMusicians({
+    page,
+    rowsPerPage,
+    sortBy,
+    descending,
+    filter,
+  });
+
+  // Update musicians data
+  musicians.value = musiciansStore.musicians;
+  // Update pagination and loading status
+  pagination.value.page = page;
+  pagination.value.rowsPerPage = rowsPerPage;
+  pagination.value.sortBy = sortBy;
+  pagination.value.descending = descending;
+  pagination.value.rowsNumber = musiciansStore.totalMusicians;
+
+  loading.value = false;
+};
+
+const redirectToRegister = () => {
+  router.push("add-musician");
+};
+
+onMounted(() => {
+  // Get initial data from your Pinia store (1st page)
+  tableRef.value.requestServerInteraction();
+});
 </script>

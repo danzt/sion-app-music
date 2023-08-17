@@ -27,17 +27,35 @@ const routes = [
       },
       */
       {
-        path: "users",
-        name: "users",
-        component: () => import("pages/UsersPage.vue"),
-        meta: { requiresAuth: true, title: "Profile" },
-      }, // Nueva ruta para listar usuarios
+        path: "profile",
+        name: "profile",
+        component: () => import("pages/ProfilePage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "calendary",
+        name: "calendary",
+        component: () => import("pages/CalendaryPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "events",
+        name: "events",
+        component: () => import("pages/EventsPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "add-musician",
+        name: "add-musician",
+        component: () => import("pages/MusicianPage.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 
   {
     path: "/login",
-    component: () => import("layouts/MainLayout.vue"),
+    component: () => import("layouts/PublicLayout.vue"),
     children: [
       {
         path: "",
@@ -49,7 +67,7 @@ const routes = [
   },
   {
     path: "/register",
-    component: () => import("layouts/MainLayout.vue"),
+    component: () => import("layouts/PublicLayout.vue"),
     children: [
       {
         path: "",
