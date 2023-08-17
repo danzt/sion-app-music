@@ -32,12 +32,7 @@ const routes = [
         component: () => import("pages/ProfilePage.vue"),
         meta: { requiresAuth: true },
       },
-      {
-        path: "calendary",
-        name: "calendary",
-        component: () => import("pages/CalendaryPage.vue"),
-        meta: { requiresAuth: true },
-      },
+
       {
         path: "events",
         name: "events",

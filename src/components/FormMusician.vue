@@ -58,7 +58,7 @@
 import { useQuasar } from "quasar";
 import { ref, reactive, toRefs } from "vue";
 import { storeToRefs } from "pinia";
-import useNotify from "../composables/UseNotify";
+import useNotify from "../composables/useNotify";
 import { useMusiciansStore } from "../store/musicians"; // Import your Pinia store
 
 const $q = useQuasar();

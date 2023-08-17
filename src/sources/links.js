@@ -12,12 +12,6 @@ const linksList = [
     route: "profile",
   },
   {
-    title: "Calendar",
-    caption: "Calendary",
-    icon: "calendar_today",
-    route: "calendary",
-  },
-  {
     title: "Events",
     caption: "Events",
     icon: "event",
