@@ -8,19 +8,18 @@
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { supabase } from "../boot/supabase";
-import { useMusiciansStore } from "../store/musicians";
+import { useUsersStore } from "../store/users";
+import { useAuthStore } from "../store/auth";
 
 import MusiciansTable from "../components/MusiciansTable.vue";
 
-const user = ref(null);
-const musiciansStore = useMusiciansStore();
-const { musicians } = storeToRefs(musiciansStore);
+const usersStore = useUsersStore();
 
 onMounted(async () => {
   await getUserData();
 });
 
 const getUserData = async () => {
-  musiciansStore.fetchMusicians();
+  usersStore.fetchUsers();
 };
 </script>

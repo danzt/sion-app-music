@@ -5,7 +5,7 @@
       bordered
       ref="tableRef"
       title="Musicos"
-      :rows="musicians"
+      :rows="users"
       :columns="columns"
       row-key="id"
       v-model:pagination="pagination"
@@ -44,7 +44,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useMusiciansStore } from "../store/musicians"; // Import your Pinia store here
+import { useUsersStore } from "../store/users"; // Import your Pinia store here
 
 const columns = [
   {
@@ -79,7 +79,7 @@ const columns = [
     },
   },
 ];
-
+// esto debo llenarlo dinamico!
 const roleOptions = [
   {
     label: "Musician",
@@ -102,10 +102,10 @@ const pagination = ref({
   rowsNumber: 0, // Will be updated in onRequest
 });
 
-const musiciansStore = useMusiciansStore(); // Replace with your Pinia store
+const usersStore = useUsersStore(); // Replace with your Pinia store
 
-// Define a ref for the musicians data
-const musicians = ref([]);
+// Define a ref for the users data
+const users = ref([]);
 const router = useRouter();
 
 const onRequest = async (props) => {
@@ -115,7 +115,7 @@ const onRequest = async (props) => {
   loading.value = true;
 
   // Fetch data from your Pinia store
-  await musiciansStore.fetchMusicians({
+  await usersStore.fetchUsers({
     page,
     rowsPerPage,
     sortBy,
@@ -123,14 +123,14 @@ const onRequest = async (props) => {
     filter,
   });
 
-  // Update musicians data
-  musicians.value = musiciansStore.musicians;
+  // Update users data
+  users.value = usersStore.users;
   // Update pagination and loading status
   pagination.value.page = page;
   pagination.value.rowsPerPage = rowsPerPage;
   pagination.value.sortBy = sortBy;
   pagination.value.descending = descending;
-  pagination.value.rowsNumber = musiciansStore.totalMusicians;
+  pagination.value.rowsNumber = usersStore.totalMusicians;
 
   loading.value = false;
 };

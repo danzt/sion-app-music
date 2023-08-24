@@ -18,7 +18,7 @@
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
+      <q-list v-if="isAdmin">
         <q-item-label header> </q-item-label>
 
         <EssentialLink
@@ -38,17 +38,25 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import { supabase } from "../boot/supabase";
 import linksList from "../sources/links";
-
+import { useAuthStore } from "../store/auth";
 import EssentialLink from "components/EssentialLink.vue";
+
+const authStore = useAuthStore();
+const { isAdmin } = storeToRefs(authStore);
+onMounted(async () => {
+  await authStore.loadUser();
+});
 
 const leftDrawerOpen = ref(false);
 
 const essentialLinks = linksList;
 
+const { user } = storeToRefs(authStore);
 const logout = async () => {
   await supabase.auth.signOut();
   router.push({ path: "/login" });

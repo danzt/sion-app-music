@@ -64,26 +64,22 @@
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { supabase } from "../boot/supabase";
-import { useUserStore } from "../store";
+import { useAuthStore } from "../store/auth";
 
 const router = useRouter();
 
-const userStore = useUserStore();
-const { user } = storeToRefs(useUserStore);
+const authStore = useAuthStore();
 
 const loginWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:9000/",
+      redirectTo: "http://localhost:9000",
     },
   });
   if (error) {
     console.log(error);
-    return;
   }
-  const user = data.user;
-  userStore.setUser(user);
 };
 
 const redirectToRegister = () => {

@@ -59,11 +59,11 @@ import { useQuasar } from "quasar";
 import { ref, reactive, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import useNotify from "../composables/useNotify";
-import { useMusiciansStore } from "../store/musicians"; // Import your Pinia store
+import { useUsersStore } from "../store/users"; // Import your Pinia store
 
 const $q = useQuasar();
-const musicianStore = useMusiciansStore(); // Use your Pinia store instance
-const { musicians } = storeToRefs(musicianStore);
+const usersStore = useUsersStore(); // Use your Pinia store instance
+const { users } = storeToRefs(usersStore);
 
 const { notifyError, notifySuccess } = useNotify();
 
@@ -88,7 +88,7 @@ const roleOptions = [
 const onSubmit = async () => {
   // Construct the musician object
 
-  const musician = {
+  const user = {
     first_name: formData.value.first_name,
     last_name: formData.value.last_name,
     phone_number: formData.value.phone_number,
@@ -96,7 +96,7 @@ const onSubmit = async () => {
     // Add other fields
   };
 
-  const isSuccess = await musicianStore.createOrUpdateMusician(musician);
+  const isSuccess = await usersStore.createOrUpdateUser(user);
   if (isSuccess) {
     notifySuccess("Musician created");
     onReset();

@@ -2,40 +2,38 @@ import { defineStore } from "pinia";
 
 import { supabase } from "../boot/supabase";
 
-export const useMusiciansStore = defineStore("musicians", {
+export const useUsersStore = defineStore("users", {
   state: () => ({
-    musicians: [],
+    users: [],
   }),
   actions: {
-    async fetchMusicians() {
+    async fetchUsers() {
       const { data, error } = await supabase
-        .from("musicians")
+        .from("users")
         .select(`*, roles(id,name)`);
       if (error) {
         throw error;
       }
-      this.musicians = data;
+      this.users = data;
     },
-    async createOrUpdateMusician(musician) {
+    async createOrUpdateUser(user) {
       try {
-        if (musician.id) {
-          const { data, error } = await supabase
-            .from("musicians")
-            .update(musician)
-            .eq("id", musician.id);
+        if (user.id) {
+          const { error } = await supabase
+            .from("users")
+            .update(user)
+            .eq("id", user.id);
           if (error) {
             throw error;
           }
         } else {
-          const { data, error } = await supabase
-            .from("musicians")
-            .insert(musician);
+          const { error } = await supabase.from("users").insert(user);
           if (error) {
             throw error;
           }
         }
 
-        this.fetchMusicians();
+        this.fetchUsers();
         return true;
       } catch (error) {
         console.log(error);
