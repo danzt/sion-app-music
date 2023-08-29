@@ -72,6 +72,18 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/select-role",
+    component: () => import("layouts/PublicLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "select-role",
+        component: () => import("pages/SelectRolePage.vue"),
+        meta: { requiresGuest: true, title: "Select Role" },
+      },
+    ],
+  },
 
   {
     path: "/:catchAll(.*)*",

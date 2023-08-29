@@ -17,7 +17,7 @@ export const useAuthStore = defineStore("auth", {
         .select(`*, roles(id,name)`)
         .eq("auth_id", data.user.id)
         .single();
-
+      if (userError) throw userError;
       this.user = dataUser;
     },
 
